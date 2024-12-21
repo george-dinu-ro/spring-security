@@ -20,4 +20,9 @@ public class ContentController {
 	String getAdminHomePage() {
 		return "admin-home";
 	}
+
+	@GetMapping("/login")
+	String getLoginPage() {
+		return "custom-login";
+	}
 }

@@ -30,7 +30,9 @@ public class SecurityConfiguration {
 							.requestMatchers("/user/**").hasRole("USER")
 							.requestMatchers("/admin/**").hasRole("ADMIN")
 							.anyRequest().authenticated())
-				.formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
+				.formLogin(configurer -> {
+					configurer.loginPage("/login").permitAll();
+				})
 				.build();
 	}
 
