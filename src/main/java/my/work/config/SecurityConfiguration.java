@@ -6,12 +6,10 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
 import lombok.RequiredArgsConstructor;
 
 @EnableWebSecurity
@@ -30,12 +28,13 @@ public class SecurityConfiguration {
 							.requestMatchers("/user/**").hasRole("USER")
 							.requestMatchers("/admin/**").hasRole("ADMIN")
 							.anyRequest().authenticated())
-				.formLogin(configurer -> {
-					configurer.loginPage("/login").permitAll();
-				})
+				.formLogin(configurer -> configurer
+						.loginPage("/login")
+						.successHandler(new AuthenticationSuccessHandler())
+						.permitAll())
 				.build();
 	}
-
+    
 	@Bean
 	AuthenticationProvider authenticationProvider() {
 		var provider = new DaoAuthenticationProvider();
