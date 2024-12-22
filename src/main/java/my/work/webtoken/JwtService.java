@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
@@ -38,6 +39,16 @@ public class JwtService {
 				.compact();
 	}
 
+	public String getUsername(String jwt) {
+		var claims = getClaims(jwt);
+		return claims.getSubject();
+	}
+	
+	public boolean isValidToken(String jwt) {
+		var claims = getClaims(jwt);
+		return claims.getExpiration().after(Date.from(Instant.now()));
+	}
+
 	private long getSecretKeyValidity() {
 		return TimeUnit.MINUTES.toMillis(secretKeyValidity);
 	}
@@ -45,5 +56,13 @@ public class JwtService {
 	private SecretKey getSecretKey() {
 		var decodedKey = Base64.getDecoder().decode(secretKey);
 		return Keys.hmacShaKeyFor(decodedKey);
+	}
+	
+	private Claims getClaims(String jwt) {
+		return Jwts.parser()
+				.verifyWith(getSecretKey())
+				.build()
+				.parseSignedClaims(jwt)
+				.getPayload();
 	}
 }

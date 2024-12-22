@@ -23,17 +23,17 @@ public class ContentController {
 
 	@GetMapping("/home")
 	String getHomePage() {
-		return "home";
+		return "Welcome to home";
 	}
 
 	@GetMapping("/user/home")
 	String getUserHomePage() {
-		return "user-home";
+		return "Welcome to user home";
 	}
 
 	@GetMapping("/admin/home")
 	String getAdminHomePage() {
-		return "admin-home";
+		return "Welcome to admin home";
 	}
 
 	@PostMapping("/authenticate")
